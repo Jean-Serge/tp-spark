@@ -4,12 +4,12 @@
 
 Lancement du maître : 
 
-	docker run -t-d -v $HOME/Documents/sid/tp-spark:/root -p 8080:8080 --name master -h master sequenceiq/spark:1.6.0 '/usr/local/spark/sbin/start-master.sh ; tail -f /usr/local/spark/logs/*'
+	docker run -d -p 7077:7077 -p 8080:8080 --name master sequenceiq/spark:1.6.0 '/usr/local/spark/sbin/start-master.sh ; tail -f /usr/local/spark/logs/*'
 	
 
 Lancement des esclaves :
 
-	docker run -d -v $HOME/Documents/sid/tp-spark:/root -e SPARK_MASTER_IP=master -e SPARK_WORKER_CORES=1 -e SPARK_WORKER_MEMORY=1g -e SPARK_WORKER_INSTANCES=4 --link master:master sequenceiq/spark:1.6.0 '/usr/local/spark/sbin/start-slave.sh spark://master:7077 ; tail -f /usr/local/spark/logs/*' 
+	docker run -d -e SPARK_MASTER_IP=192.168.12.111 -e SPARK_WORKER_CORES=1 -e SPARK_WORKER_MEMORY=1g -e SPARK_WORKER_INSTANCES=4 sequenceiq/spark:1.6.0 '/usr/local/spark/sbin/start-slave.sh spark://${SPARK_MASTER_IP}):7077 ; tail -f /usr/local/spark/logs/*' 
 
 Le port 8080 du maître donne accès à l'interface web de *SPARK* qui permet de consulter l'état du maître (nombre d'esclaves, état des esclaves, programmes en cours).
 
